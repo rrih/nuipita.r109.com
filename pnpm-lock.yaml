@@ -16,6 +16,9 @@ dependencies:
     version: 19.2.7(react@19.2.7)
 
 devDependencies:
+  '@axe-core/playwright':
+    specifier: ^4.12.1
+    version: 4.12.1(playwright-core@1.61.1)
   '@opennextjs/cloudflare':
     specifier: ^1.19.11
     version: 1.20.2(next@16.2.9)(wrangler@4.114.0)
@@ -808,6 +811,15 @@ packages:
   /@aws/lambda-invoke-store@0.3.0:
     resolution: {integrity: sha512-sl4Bm6yiMNYrZKkqqDFWN0UfnWhlS8ivKxrYl+6t0gCLrqr8y3B2IqZZbFRkfaVVp7C/baApyh71P+LeE1A2sQ==}
     engines: {node: '>=18.0.0'}
+    dev: true
+
+  /@axe-core/playwright@4.12.1(playwright-core@1.61.1):
+    resolution: {integrity: sha512-rMd7xriptqKpP+w5265i4Hdkv2X5kbu6uiBi/B2I7uf3hieRBM3qDCfaKPtxfiYb2mKXfF+yLODJwIx+Jv1GDw==}
+    peerDependencies:
+      playwright-core: '>= 1.0.0'
+    dependencies:
+      axe-core: 4.12.1
+      playwright-core: 1.61.1
     dev: true
 
   /@babel/code-frame@7.29.7:
