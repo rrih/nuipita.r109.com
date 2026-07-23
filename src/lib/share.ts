@@ -1,0 +1,2 @@
+export function encodeShare(value:unknown){const json=JSON.stringify({v:1,d:value});return btoa(unescape(encodeURIComponent(json))).replaceAll("+","-").replaceAll("/","_").replaceAll("=","");}
+export function decodeShare(payload:string){if(!/^[A-Za-z0-9_-]{1,1800}$/.test(payload))return null;try{const json=decodeURIComponent(escape(atob(payload.replaceAll("-","+").replaceAll("_","/")+"=".repeat((4-payload.length%4)%4))));const x=JSON.parse(json) as {v?:number;d?:unknown};return x.v===1?x.d:null;}catch{return null;}}

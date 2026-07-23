@@ -1,0 +1,1 @@
+export function GET(){const client=process.env.NEXT_PUBLIC_ADSENSE_CLIENT??"";const match=/^ca-pub-([0-9]+)$/.exec(client);return new Response(match?`google.com, pub-${match[1]}, DIRECT, f08c47fec0942fa0\n`:"",{headers:{"Content-Type":"text/plain; charset=utf-8"}})}

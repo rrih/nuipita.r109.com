@@ -1,0 +1,1 @@
+import {describe,expect,it} from "vitest";import {decodeShare,encodeShare} from "@/lib/share";describe("share codec",()=>{it("round trips Japanese text",()=>{const p=encodeShare({name:"うちの子",score:55});expect(decodeShare(p)).toEqual({name:"うちの子",score:55})});it("rejects malformed payload",()=>expect(decodeShare("<script>")).toBeNull())});

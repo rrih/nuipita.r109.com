@@ -1,0 +1,1 @@
+import type {MetadataRoute} from "next";import {siteConfig} from "@/config/site";export default function sitemap():MetadataRoute.Sitemap{return ["/","/nui","/pouch","/guide","/install","/about","/privacy","/terms","/contact"].map(path=>({url:siteConfig.url+path,lastModified:new Date("2026-07-24")}));}
