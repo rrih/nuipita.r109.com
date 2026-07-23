@@ -1,2 +1,2 @@
-export type BlogBlock={type:"paragraph"|"heading"|"list"|"steps"|"callout";text?:string;items?:string[];level?:2|3};
+export type BlogBlock={type:"paragraph"|"heading"|"list"|"steps"|"table"|"diagram"|"callout"|"cta"|"relatedPosts";text?:string;items?:string[];level?:2|3;columns?:string[];rows?:string[][];href?:string;caption?:string};
 export type BlogPost={slug:string;title:string;description:string;datePublished:string;dateModified:string;readMinutes:number;category:string;cta:{label:string;href:string};blocks:BlogBlock[]};
