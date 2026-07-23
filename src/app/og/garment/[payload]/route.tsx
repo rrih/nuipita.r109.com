@@ -1,0 +1,3 @@
+import {ImageResponse} from "next/og";
+import {decodeShare} from "@/lib/share";
+export function GET(_request:Request,{params}:{params:Promise<{payload:string}>}){return params.then(({payload})=>{const data=decodeShare(payload) as {kind?:string;name?:string}|null;return new ImageResponse(<div style={{width:"100%",height:"100%",display:"flex",flexDirection:"column",justifyContent:"center",padding:80,background:"#fff8f2",color:"#493c38",fontFamily:"sans-serif"}}><div style={{fontSize:34}}>ぬいぴた</div><div style={{fontSize:58,marginTop:32}}>{data?.kind==="garment"?data.name||"ぬい服サイズ":"ぬい服サイズ"}</div><div style={{fontSize:38,marginTop:24}}>寸法を確認できます</div></div>,{width:1200,height:630})})}

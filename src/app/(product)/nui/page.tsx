@@ -1,6 +1,6 @@
 "use client";
 import {useEffect,useRef,useState} from "react";
-import {clearAllData,deleteProfile,exportBackup,importBackup,listProfiles,makeProfile,putProfile} from "@/lib/storage";
+import {clearAllData,deleteProfile,exportBackup,importBackup,listProfiles,makeProfile,putProfile,storageUnavailable} from "@/lib/storage";
 import {encodeShare} from "@/lib/share";
 import {measurementCompletion,measurementRegistry,normalizeCentimeters,type MeasurementKey} from "@/features/profiles/measurements";
 import {PlushAvatar} from "@/components/profiles/PlushAvatar";
@@ -10,7 +10,7 @@ import type {Profile,PlushShape,Softness} from "@/features/profiles/types";
 export default function Nui(){
   const [name,setName]=useState("");const [shape,setShape]=useState<PlushShape>("round");const [softness,setSoftness]=useState<Softness>("balanced");const [theme,setTheme]=useState("coral");
   const [measurements,setMeasurements]=useState<Record<string,string>>({});const [saved,setSaved]=useState<Profile[]>([]);const [notice,setNotice]=useState("");const [removeTarget,setRemoveTarget]=useState<Profile|null>(null);const [shareTarget,setShareTarget]=useState<Profile|null>(null);const [shareName,setShareName]=useState(true);const [shareMeasurements,setShareMeasurements]=useState(false);const [clearOpen,setClearOpen]=useState(false);const fileRef=useRef<HTMLInputElement>(null);
-  useEffect(()=>{let active=true;listProfiles().then(value=>{if(active)setSaved(value)}).catch(()=>{if(active)setNotice("この端末では保存できません。今だけ使えます")});return()=>{active=false}},[]);
+  useEffect(()=>{let active=true;const timer=window.setTimeout(()=>{if(storageUnavailable()&&active)setNotice("この端末では保存できません。今だけ使えます")},0);listProfiles().then(value=>{if(active)setSaved(value)}).catch(()=>{if(active)setNotice("この端末では保存できません。今だけ使えます")});return()=>{active=false;window.clearTimeout(timer)}},[]);
   function updateMeasurement(key:MeasurementKey,value:string){setMeasurements(current=>({...current,[key]:value}))}
   async function save(){const profile=makeProfile(name);profile.shape=shape;profile.softness=softness;profile.avatarTheme=theme;profile.measurements=Object.fromEntries(measurementRegistry.map(item=>[item.key,normalizeCentimeters(measurements[item.key]??"")]).filter(([,value])=>value!==undefined)) as Profile["measurements"];try{await putProfile(profile);setSaved(value=>[...value,profile]);setName("");setMeasurements({});setNotice("カルテを保存しました")}catch{setNotice("名前と寸法を確認してください")}}
   async function remove(){if(!removeTarget)return;await deleteProfile(removeTarget.id);setSaved(value=>value.filter(item=>item.id!==removeTarget.id));setRemoveTarget(null);setNotice("カルテを削除しました")}
