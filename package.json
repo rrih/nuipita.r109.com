@@ -2,7 +2,7 @@
   "name": "nuipita",
   "version": "1.0.0",
   "private": true,
-  "scripts": {"dev":"next dev","build":"next build","preview":"opennextjs-cloudflare build && opennextjs-cloudflare preview","deploy":"opennextjs-cloudflare build && opennextjs-cloudflare deploy","upload":"opennextjs-cloudflare build && opennextjs-cloudflare upload","build:cf":"opennextjs-cloudflare build","lint":"eslint .","typecheck":"tsc --noEmit","test":"vitest run","test:e2e":"playwright test","check":"pnpm lint && pnpm typecheck && pnpm test && pnpm build:cf"},
+  "scripts": {"dev":"next dev","build":"next build","preview":"opennextjs-cloudflare build && opennextjs-cloudflare preview","deploy":"opennextjs-cloudflare build && opennextjs-cloudflare deploy","upload":"opennextjs-cloudflare build && opennextjs-cloudflare upload","build:cf":"opennextjs-cloudflare build","brand-assets":"node scripts/generate-brand-assets.mjs","lint":"eslint .","typecheck":"tsc --noEmit","test":"vitest run","test:watch":"vitest","test:e2e":"playwright test","check":"pnpm lint && pnpm typecheck && pnpm test && pnpm build:cf"},
   "dependencies":{"next":"16.2.9","react":"19.2.7","react-dom":"19.2.7"},
   "devDependencies":{"@opennextjs/cloudflare":"^1.19.11","@playwright/test":"^1.59.1","@types/node":"^20","@types/react":"^19","@types/react-dom":"^19","eslint":"^9","eslint-config-next":"16.2.9","typescript":"^5.9.3","vitest":"^4.1.5","wrangler":"^4.87.0"},
   "engines":{"node":">=20"},"packageManager":"pnpm@10.12.4"

@@ -1,0 +1,13 @@
+import type {Profile} from "@/features/profiles/types";
+const DB_NAME="nuipita";const DB_VERSION=1;const STORES=["profiles","garmentDrafts","pouchDrafts","results","settings"] as const;
+export type StoreName=typeof STORES[number];
+function openDb():Promise<IDBDatabase>{return new Promise((resolve,reject)=>{if(typeof indexedDB==="undefined"){reject(new Error("unavailable"));return}const req=indexedDB.open(DB_NAME,DB_VERSION);req.onupgradeneeded=()=>{for(const name of STORES)if(!req.result.objectStoreNames.contains(name))req.result.createObjectStore(name,{keyPath:"id"})};req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error??new Error("open"))})}
+async function request<T>(store:StoreName,mode:IDBTransactionMode,action:(os:IDBObjectStore)=>IDBRequest<T>|void){const db=await openDb();return new Promise<T|undefined>((resolve,reject)=>{const tx=db.transaction(store,mode);const result=action(tx.objectStore(store));if(!result){tx.oncomplete=()=>resolve(undefined);tx.onerror=()=>reject(tx.error);return}result.onsuccess=()=>resolve(result.result);result.onerror=()=>reject(result.error)})}
+export async function listProfiles(){return (await request<Profile[]>("profiles","readonly",os=>os.getAll()))??[]}
+export async function putProfile(profile:Profile){const profiles=await listProfiles();if(!profiles.some(x=>x.id===profile.id)&&profiles.length>=30)throw new Error("profile-limit");await request("profiles","readwrite",os=>os.put(profile))}
+export async function deleteProfile(id:string){await request("profiles","readwrite",os=>os.delete(id))}
+export function makeProfile(name:string):Profile{const now=new Date().toISOString();return {id:crypto.randomUUID(),name:name.trim().slice(0,40),shape:"round",softness:"balanced",avatarTheme:"coral",measurements:{},createdAt:now,updatedAt:now,dataVersion:1}}
+export type Backup={version:1;profiles:Profile[];exportedAt:string};
+export function validateBackup(value:unknown):value is Backup{if(!value||typeof value!=="object")return false;const x=value as Partial<Backup>;return x.version===1&&Array.isArray(x.profiles)&&x.profiles.length<=30&&x.profiles.every(p=>{if(!p||typeof p!=="object")return false;const q=p as Profile;return typeof q.id==="string"&&q.name.length<=40&&q.dataVersion===1&&q.measurements&&Object.values(q.measurements).every(v=>v===undefined||(typeof v==="number"&&v>=.1&&v<=200))})}
+export async function exportBackup():Promise<Backup>{return {version:1,profiles:await listProfiles(),exportedAt:new Date().toISOString()}}
+export async function importBackup(value:unknown){if(!validateBackup(value))throw new Error("invalid-backup");for(const profile of value.profiles)await putProfile(profile)}

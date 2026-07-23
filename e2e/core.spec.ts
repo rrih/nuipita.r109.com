@@ -1,0 +1,3 @@
+import {test,expect} from "@playwright/test";
+test("core screens fit a narrow viewport",async({page})=>{await page.setViewportSize({width:320,height:568});await page.goto("/");await expect(page.getByText("ぴったりを探す")).toBeVisible();expect(await page.evaluate(()=>document.documentElement.scrollWidth)).toBeLessThanOrEqual(320);await page.goto("/nui");await page.getByPlaceholder("ぬいの名前").fill("こぐま");await page.getByRole("button",{name:"保存する"}).click();await expect(page.getByText("こぐま")).toBeVisible()});
+test("blog links into product",async({page})=>{await page.goto("/blog");await expect(page.getByRole("link",{name:"ぬいぴたを使う"})).toBeVisible();await page.getByRole("link",{name:"ぬいぴたを使う"}).click();await expect(page.getByText("ぴったりを探す")).toBeVisible()});
