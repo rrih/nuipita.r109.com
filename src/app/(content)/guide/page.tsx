@@ -1,1 +1,3 @@
+import type {Metadata} from "next";
+export const metadata:Metadata={title:"使い方",description:"ぬいぴたで採寸、ぬい服、ポーチを比べる手順を紹介します。"};
 export default function Guide(){return <article><h1>使い方</h1><p>ぬいを選び、寸法を入力すると、服やポーチとの比較結果を確認できます。</p><h2>採寸のコツ</h2><p>つぶさずに、いちばん大きいところを測ります。平置きの幅は一周にするときだけ2倍にします。</p><h2>結果について</h2><p>表示は寸法から見た目安です。生地、形、縫製によって変わるため、購入前に実物の寸法も確認してください。</p></article>}
