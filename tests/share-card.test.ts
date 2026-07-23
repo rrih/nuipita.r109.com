@@ -1,0 +1,1 @@
+import {describe,expect,it} from "vitest";import {shareCardSvg} from "@/lib/share-card";describe("share card",()=>{it("escapes user text in SVG",()=>{const svg=shareCardSvg("<ぬい>","&目安");expect(svg).not.toContain("<ぬい>");expect(svg).toContain("&lt;ぬい&gt;");expect(svg).toContain("&amp;目安")})});
