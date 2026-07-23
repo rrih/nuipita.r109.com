@@ -16,3 +16,4 @@ common("ぬい服作家向け｜伝わりやすいサイズ表の作り方","対
 common("うちのぬいのサイズを一度だけ測って使い回す方法","採寸カルテへ残しておくと、買い物や作家への問い合わせで同じ測定を繰り返さずに済みます。","採寸","/nui",["カルテを作る","買い物で使う","共有時の注意"])
 ];
 export function getPost(slug:string){return posts.find(post=>post.slug===slug)}
+const requiredSlugs=["nui-fuku-size-10cm-15cm","nui-measurement-guide","nui-fuku-head-wont-fit","nui-fuku-flat-measurement","nui-fuku-stretch","nui-pants-overall-size","nui-pouch-inner-size","nui-pouch-falls-over","two-nui-one-pouch","nui-pouch-depth","handmade-nui-fuku-size-card","nui-size-card"];posts.forEach((post,index)=>{post.slug=requiredSlugs[index]});
