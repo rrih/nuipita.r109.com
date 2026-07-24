@@ -12,7 +12,7 @@ function NavIcon({name}:NavIconProps){
 export function AppBottomNav(){
   const pathname=usePathname();
   const tabs=[
-    ["/nui","カルテ","profile"],
+    ["/nui","ぬいを登録","profile"],
     ["/","服","clothes"],
     ["/pouch","ポーチ","pouch"],
   ] as const;
