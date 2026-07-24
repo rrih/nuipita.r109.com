@@ -11,9 +11,9 @@ import {LoadingSkeleton} from "@/components/ui/LoadingSkeleton";
 import type {Profile,PlushShape,Softness} from "@/features/profiles/types";
 
 const shapeOptions:[PlushShape,string,string,string][]=[
-  ["round","まるい","丸い・球体に近い","/shapes/round.png"],
-  ["humanoid","人型","手足がはっきりある","/shapes/humanoid.png"],
-  ["longEar","耳なが","耳や角が長い","/shapes/long-ear.png"],
+  ["round","まるい","丸い・球体に近い","/shapes-jpg/round.jpg"],
+  ["humanoid","人型","手足がはっきりある","/shapes-jpg/humanoid.jpg"],
+  ["longEar","耳なが","耳や角が長い","/shapes-jpg/long-ear.jpg"],
 ];
 
 export default function Nui(){
@@ -41,7 +41,7 @@ export default function Nui(){
     </div>
     <div className="card"><h2>端末内データ</h2><div className="actions"><button className="secondary" onClick={download}>書き出す</button><button className="secondary" onClick={()=>fileRef.current?.click()}>読み込む</button><button className="secondary" onClick={()=>setClearOpen(true)}>すべて消去</button><input ref={fileRef} type="file" accept="application/json" onChange={restore} hidden/></div></div>
     {loading&&<LoadingSkeleton label="保存したカルテを読み込み中"/>}<Toast key={notice} message={notice}/>
-    <section aria-label="保存したプロフィール">{saved.map(profile=><div className="card" key={profile.id}><div className="actions" style={{alignItems:"center"}}><PlushAvatar shape={profile.shape} theme={profile.avatarTheme} size={56}/><div><strong>{profile.name}</strong><div className="small">採寸充足度 {measurementCompletion(profile.measurements)}%・更新 {profile.updatedAt.slice(0,10)}</div></div></div><div className="actions"><button className="secondary" onClick={()=>setShareTarget(profile)}>共有</button><button className="secondary" onClick={()=>duplicate(profile)}>複製</button><button className="secondary" onClick={()=>setRemoveTarget(profile)}>削除</button></div></div>)}</section>
+    <section aria-label="保存したプロフィール">{saved.map(profile=>{const option=shapeOptions.find(([value])=>value===profile.shape)??shapeOptions[0];return <div className="card" key={profile.id}><div className="actions" style={{alignItems:"center"}}><Image src={option[3]} alt={`${profile.name}の${option[1]}のぬいイメージ`} width={56} height={56}/><div><strong>{profile.name}</strong><div className="small">採寸充足度 {measurementCompletion(profile.measurements)}%・更新 {profile.updatedAt.slice(0,10)}</div></div></div><div className="actions"><button className="secondary" onClick={()=>setShareTarget(profile)}>共有</button><button className="secondary" onClick={()=>duplicate(profile)}>複製</button><button className="secondary" onClick={()=>setRemoveTarget(profile)}>削除</button></div></div>})}</section>
     {removeTarget&&<div className="drawer" role="presentation"><aside role="dialog" aria-modal="true" aria-label="削除の確認"><h2>このカルテを削除しますか？</h2><p className="small">削除したデータはこの端末から戻せません。</p><div className="actions"><button onClick={remove}>削除する</button><button className="secondary" onClick={()=>setRemoveTarget(null)}>やめる</button></div></aside></div>}
     {clearOpen&&<div className="drawer" role="presentation"><aside role="dialog" aria-modal="true" aria-label="データ消去の確認"><h2>端末内のデータを消去しますか？</h2><p className="small">プロフィール、判定、下書きをすべて消去します。</p><div className="actions"><button onClick={clearData}>消去する</button><button className="secondary" onClick={()=>setClearOpen(false)}>やめる</button></div></aside></div>}
     {shareTarget&&<div className="drawer" role="presentation"><aside role="dialog" aria-modal="true" aria-label="カルテ共有"><h2>カルテを共有</h2><p className="small">共有リンクを知っている人が見られます。</p><label><input type="checkbox" checked={shareName} onChange={e=>setShareName(e.target.checked)}/> 名前を載せる</label><label><input type="checkbox" checked={shareMeasurements} onChange={e=>setShareMeasurements(e.target.checked)}/> 寸法を載せる</label><div className="actions"><ShareActions title="採寸カルテ" status="寸法から見た目安" url={`${location.origin}/s/${shared}`}/><button className="secondary" onClick={()=>navigator.clipboard?.writeText(`${location.origin}/s/${shared}`)}>リンクをコピー</button><button className="secondary" onClick={()=>setShareTarget(null)}>閉じる</button></div></aside></div>}
