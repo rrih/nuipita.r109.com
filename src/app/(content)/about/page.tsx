@@ -1,3 +1,3 @@
 import type {Metadata} from "next";
 export const metadata:Metadata={title:"ぬいぴたについて"};
-export default function About(){return <article><h1>ぬいぴたについて</h1><p>ぬい服とポーチのサイズ選びを、手元の採寸から考えるための小さな道具です。</p></article>}
+export default function About(){return <article><h1>ぬいぴたについて</h1><p>ぬいぴたは、うちのぬいを先に登録してから、服やポーチのサイズを比べられる小さな道具です。</p><h2>できること</h2><ul><li>うちのぬいの形と寸法をカルテに保存する</li><li>服の寸法を入力して、きつそう・ゆったりそうを確認する</li><li>ポーチの内寸と、1〜3体のぬいの入り方を比べる</li><li>名前や寸法を選んで、結果をリンクや画像で共有する</li></ul><h2>大切にしていること</h2><p>専門用語をできるだけ使わず、入力した数字がどの部分を表すかを画面で確認できるようにしています。判定はあくまで寸法から見た目安です。実物の生地や縫い方、個体差もあわせてご確認ください。</p></article>}

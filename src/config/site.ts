@@ -1,1 +1,1 @@
-export const siteConfig={name:"ぬいぴた",shortName:"ぬいぴた",url:"https://nuipita.r109.com",domain:"nuipita.r109.com",contactEmail:"contact@r109.com",locale:"ja_JP",language:"ja",themeColor:"#FFF8F2",backgroundColor:"#FFF8F2"} as const;
+export const siteConfig={name:"ぬいぴた",shortName:"ぬいぴた",url:"https://nuipita.r109.com",domain:"nuipita.r109.com",contactEmail:"support@nuipita.r109.com",locale:"ja_JP",language:"ja",themeColor:"#FFF8F2",backgroundColor:"#FFF8F2"} as const;

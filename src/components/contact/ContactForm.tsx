@@ -1,0 +1,5 @@
+"use client";
+import {useState} from "react";
+import {siteConfig} from "@/config/site";
+
+export function ContactForm(){const [topic,setTopic]=useState("使い方");const [message,setMessage]=useState("");const [sent,setSent]=useState(false);function submit(event:React.FormEvent){event.preventDefault();const subject=encodeURIComponent(`ぬいぴた：${topic}`);const body=encodeURIComponent(`${message}\n\n※返信が必要な場合は、メールアプリからご自身の連絡先を添えて送信してください。`);window.location.href=`mailto:${siteConfig.contactEmail}?subject=${subject}&body=${body}`;setSent(true)}return <form className="card stitch contact-form" onSubmit={submit}><label className="field">ご用件<select value={topic} onChange={e=>setTopic(e.target.value)}><option>使い方</option><option>不具合</option><option>ご意見・ご提案</option><option>その他</option></select></label><label className="field">内容<textarea required value={message} onChange={e=>setMessage(e.target.value)} placeholder="困ったこと、気づいたことを入力してください" rows={7}/></label><button type="submit">メールで送る</button>{sent&&<p className="small" role="status">メールアプリを開きました。送信前に宛先と内容をご確認ください。</p>}</form>}
