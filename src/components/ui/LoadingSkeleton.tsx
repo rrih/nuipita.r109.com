@@ -1,0 +1,1 @@
+export function LoadingSkeleton({label="読み込み中"}:{label?:string}){return <div className="skeleton-stack" role="status" aria-label={label}><span className="skeleton-line wide"/><span className="skeleton-line"/><span className="skeleton-line short"/></div>}
