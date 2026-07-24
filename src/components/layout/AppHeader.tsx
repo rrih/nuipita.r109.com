@@ -49,6 +49,7 @@ export function AppHeader(){
     {open&&<div className={`drawer${closing?" closing":""}`} onClick={closeDrawer}><aside id="app-menu" ref={drawer} tabIndex={-1} onClick={event=>event.stopPropagation()} role="dialog" aria-modal="true" aria-label="メニュー">
       <div className="drawer-heading"><strong>ぬいぴた</strong><button className="secondary" onClick={closeDrawer}>閉じる</button></div>
       {menuItems.map(([href,label])=><Link key={href} href={href} onClick={closeDrawer}>{label}</Link>)}
+      <div className="drawer-social" aria-label="公式SNS"><p>公式SNS</p><a href="https://x.com/nuipita" target="_blank" rel="noreferrer" onClick={closeDrawer}>公式X</a><a href="https://note.com/nuipita" target="_blank" rel="noreferrer" onClick={closeDrawer}>公式note</a></div>
     </aside></div>}
   </>;
 }
