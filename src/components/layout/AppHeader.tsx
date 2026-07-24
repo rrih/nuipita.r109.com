@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import {useEffect,useRef,useState} from "react";
+import {useCallback,useEffect,useRef,useState} from "react";
 
 const menuItems=[
   ["/nui","うちのぬいを登録"],
@@ -15,9 +15,11 @@ const menuItems=[
 ] as const;
 
 export function AppHeader(){
-  const [open,setOpen]=useState(false);
+  const [open,setOpen]=useState(false);const [closing,setClosing]=useState(false);
   const trigger=useRef<HTMLButtonElement>(null);
   const drawer=useRef<HTMLElement>(null);
+  function openDrawer(){setClosing(false);setOpen(true)}
+  const closeDrawer=useCallback(()=>{if(!open||closing)return;setClosing(true);window.setTimeout(()=>{setOpen(false);setClosing(false)},220)},[open,closing]);
   useEffect(()=>{
     if(!open)return;
     const returnFocus=trigger.current;
@@ -25,7 +27,7 @@ export function AppHeader(){
     document.body.style.overflow="hidden";
     drawer.current?.focus();
     const onKey=(event:KeyboardEvent)=>{
-      if(event.key==="Escape"){setOpen(false);return}
+      if(event.key==="Escape"){closeDrawer();return}
       if(event.key!=="Tab"||!drawer.current)return;
       const focusable=drawer.current.querySelectorAll<HTMLElement>("a,button");
       const first=focusable[0],last=focusable[focusable.length-1];
@@ -37,15 +39,15 @@ export function AppHeader(){
   },[open]);
   return <>
     <header className="top">
-      <button ref={trigger} aria-label="メニューを開く" aria-expanded={open} aria-controls="app-menu" className="menu-button secondary" onClick={()=>setOpen(true)}>
+      <button ref={trigger} aria-label="メニューを開く" aria-expanded={open&&!closing} aria-controls="app-menu" className="menu-button secondary" onClick={openDrawer}>
         <span className="hamburger" aria-hidden="true"><i/><i/><i/></span><span className="sr-only">メニュー</span>
       </button>
       <Link href="/" className="brand" aria-label="ぬいぴた ホーム"><span className="brand-mark">ぬいぴた</span><small>ぬい活の相棒</small></Link>
       <span className="header-spacer" aria-hidden="true"/>
     </header>
-    {open&&<div className="drawer" onClick={()=>setOpen(false)}><aside id="app-menu" ref={drawer} tabIndex={-1} onClick={event=>event.stopPropagation()} role="dialog" aria-modal="true" aria-label="メニュー">
-      <div className="drawer-heading"><strong>ぬいぴた</strong><button className="secondary" onClick={()=>setOpen(false)}>閉じる</button></div>
-      {menuItems.map(([href,label])=><Link key={href} href={href} onClick={()=>setOpen(false)}>{label}</Link>)}
+    {open&&<div className={`drawer${closing?" closing":""}`} onClick={closeDrawer}><aside id="app-menu" ref={drawer} tabIndex={-1} onClick={event=>event.stopPropagation()} role="dialog" aria-modal="true" aria-label="メニュー">
+      <div className="drawer-heading"><strong>ぬいぴた</strong><button className="secondary" onClick={closeDrawer}>閉じる</button></div>
+      {menuItems.map(([href,label])=><Link key={href} href={href} onClick={closeDrawer}>{label}</Link>)}
     </aside></div>}
   </>;
 }
