@@ -1,9 +1,16 @@
 import type {PlushShape} from "@/features/profiles/types";
 
 const palette={coral:{body:"#f2a08d",shadow:"#d77a6c",inner:"#fff1eb"},mint:{body:"#9fc8b0",shadow:"#6fa88a",inner:"#edf8f0"},lemon:{body:"#e8cf73",shadow:"#c1a84c",inner:"#fff8d9"}} as const;
+function customPalette(theme:string){
+  if(!/^#[0-9a-f]{6}$/i.test(theme))return null;
+  const number=parseInt(theme.slice(1),16);const r=number>>16,g=(number>>8)&255,b=number&255;
+  const mix=(target:number,amount:number)=>Math.round(target+(target>128?-255:255)*amount);
+  const hex=(red:number,green:number,blue:number)=>`#${[red,green,blue].map(value=>Math.max(0,Math.min(255,value)).toString(16).padStart(2,"0")).join("")}`;
+  return {body:theme,shadow:hex(mix(r,.22),mix(g,.22),mix(b,.22)),inner:hex(mix(r,.82),mix(g,.82),mix(b,.82))};
+}
 
 export function PlushAvatar({shape="round",theme="coral",size=56}:{shape?:PlushShape;theme?:string;size?:number}){
-  const colors=palette[theme as keyof typeof palette]??palette.coral;
+  const colors=palette[theme as keyof typeof palette]??customPalette(theme)??palette.coral;
   const humanoid=shape==="humanoid";
   const longEar=shape==="longEar";
   return <svg aria-label={longEar?"耳ながのぬい":humanoid?"人型のぬい":"まるいぬい"} width={size} height={size} viewBox="0 0 120 120" role="img">

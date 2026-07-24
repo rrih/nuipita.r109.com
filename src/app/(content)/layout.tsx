@@ -1,1 +1,4 @@
-import Link from "next/link";export default function ContentLayout({children}:{children:React.ReactNode}){return <div className="shell"><header className="top"><Link href="/" className="brand">ぬいぴた</Link><Link href="/install" className="small">インストール</Link></header><main className="main content">{children}</main><footer className="content-footer"><Link href="/">ぬいぴたを使う</Link><Link href="/blog">記事一覧</Link><Link href="/privacy">プライバシー</Link></footer></div>}
+import Link from "next/link";
+import {AppHeader} from "@/components/layout/AppHeader";
+import {AppBottomNav} from "@/components/layout/AppBottomNav";
+export default function ContentLayout({children}:{children:React.ReactNode}){return <div className="shell"><AppHeader/><main className="main content">{children}</main><footer className="content-footer"><Link href="/">ぬいぴたを使う</Link><Link href="/blog">記事一覧</Link><Link href="/privacy">プライバシー</Link></footer><AppBottomNav/></div>}

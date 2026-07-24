@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import {useEffect,useRef,useState} from "react";
 import {clearAllData,deleteProfile,exportBackup,importBackup,listProfiles,makeProfile,putProfile,storageUnavailable} from "@/lib/storage";
 import {encodeShare} from "@/lib/share";
@@ -7,8 +8,14 @@ import {PlushAvatar} from "@/components/profiles/PlushAvatar";
 import {ShareActions} from "@/components/share/ShareActions";
 import type {Profile,PlushShape,Softness} from "@/features/profiles/types";
 
+const shapeOptions:[PlushShape,string,string,string][]=[
+  ["round","まるい","丸い・球体に近い","/shapes/round.png"],
+  ["humanoid","人型","手足がはっきりある","/shapes/humanoid.png"],
+  ["longEar","耳なが","耳や角が長い","/shapes/long-ear.png"],
+];
+
 export default function Nui(){
-  const [name,setName]=useState("");const [shape,setShape]=useState<PlushShape>("round");const [softness,setSoftness]=useState<Softness>("balanced");const [theme,setTheme]=useState("coral");
+  const [name,setName]=useState("");const [shape,setShape]=useState<PlushShape>("round");const [softness,setSoftness]=useState<Softness>("balanced");const [theme,setTheme]=useState("#e98f80");
   const [measurements,setMeasurements]=useState<Record<string,string>>({});const [saved,setSaved]=useState<Profile[]>([]);const [notice,setNotice]=useState("");const [removeTarget,setRemoveTarget]=useState<Profile|null>(null);const [shareTarget,setShareTarget]=useState<Profile|null>(null);const [shareName,setShareName]=useState(true);const [shareMeasurements,setShareMeasurements]=useState(false);const [clearOpen,setClearOpen]=useState(false);const fileRef=useRef<HTMLInputElement>(null);
   useEffect(()=>{let active=true;const timer=window.setTimeout(()=>{if(storageUnavailable()&&active)setNotice("この端末では保存できません。今だけ使えます")},0);listProfiles().then(value=>{if(active)setSaved(value)}).catch(()=>{if(active)setNotice("この端末では保存できません。今だけ使えます")});return()=>{active=false;window.clearTimeout(timer)}},[]);
   function updateMeasurement(key:MeasurementKey,value:string){setMeasurements(current=>({...current,[key]:value}))}
@@ -21,14 +28,19 @@ export default function Nui(){
   const shared=shareTarget?encodeShare({kind:"profile",name:shareName?shareTarget.name:undefined,shape:shareTarget.shape,softness:shareTarget.softness,avatarTheme:shareTarget.avatarTheme,measurements:shareMeasurements?shareTarget.measurements:undefined}):"";
   return <>
     <h1 className="sr-only">うちのぬい採寸カルテ</h1>
-    <section className="hero"><PlushAvatar shape={shape} theme={theme} size={96}/><h2>うちのぬいを登録</h2><p className="small">最初に1体登録すると、服やポーチの判定で毎回選べます。</p></section>
-    {saved.length===0&&<div className="card onboarding"><strong>まずはカルテを1枚つくりましょう</strong><p className="small">名前と「全高・頭・胴・胴丈」を入れるだけで、服のサイズ確認を始められます。あとから追加入力もできます。</p></div>}
-    <div className="card stitch"><label className="field">呼び名<input value={name} onChange={e=>setName(e.target.value)} maxLength={40} placeholder="ぬいの名前"/><span className="field-note">例：もち、ぬいちゃん。あとで一覧から見つけやすい名前にします。</span></label><fieldset><legend>形を選ぶ</legend><div className="shape-choice">{([ ["round","まるい","丸い・球体に近い"],["humanoid","人型","手足がはっきりある"],["longEar","耳なが","耳や角が長い"]] as const).map(([value,label,description])=><button type="button" key={value} className={shape===value?"shape-option":"shape-option secondary"} aria-pressed={shape===value} onClick={()=>setShape(value)}><PlushAvatar shape={value} theme={theme} size={70}/><strong>{label}</strong><small>{description}</small></button>)}</div></fieldset><label className="field">さわり心地<select value={softness} onChange={e=>setSoftness(e.target.value as Softness)}><option value="firm">しっかりめ</option><option value="balanced">ふつう</option><option value="soft">やわらかめ</option></select></label><fieldset><legend>色</legend><div className="actions">{["coral","mint","lemon"].map(value=><button type="button" key={value} className={theme===value?"":"secondary"} aria-pressed={theme===value} onClick={()=>setTheme(value)}>{value==="coral"?"珊瑚":""}{value==="mint"?"若葉":""}{value==="lemon"?"レモン":""}</button>)}</div></fieldset><h2>採寸</h2><p className="small">単位はcm。数字はあとから直せます。</p><p className="required-guide"><span className="required">必須</span>まずはこの4項目だけで登録できます。残りは分かる範囲で大丈夫です。</p><div className="grid">{measurementRegistry.map(item=><label className="field" key={item.key}><span>{item.label}{item.required&&<span className="required">必須</span>}</span><input inputMode="decimal" value={measurements[item.key]??""} onChange={e=>updateMeasurement(item.key,e.target.value)} placeholder="cm"/></label>)}</div><button onClick={save}>保存する</button></div>
+    <section className="hero"><PlushAvatar shape={shape} theme={theme} size={112}/><h2>うちのぬいを登録</h2><p className="small">最初に1体登録すると、服やポーチの判定で毎回選べます。</p></section>
+    {saved.length===0&&<div className="card onboarding"><strong>まずはカルテを1枚つくりましょう</strong><p className="small">呼び名と形を選び、「全高・頭・胴・胴丈」を入れるだけで始められます。あとから追加入力もできます。</p></div>}
+    <div className="card stitch"><label className="field">呼び名<input value={name} onChange={e=>setName(e.target.value)} maxLength={40} placeholder="ぬいの名前"/><span className="field-note">例：もち、ぬいちゃん。あとで一覧から見つけやすい名前にします。</span></label>
+      <fieldset><legend>形を選ぶ</legend><div className="shape-choice">{shapeOptions.map(([value,label,description,image])=><button type="button" key={value} className={shape===value?"shape-option":"shape-option secondary"} aria-pressed={shape===value} onClick={()=>setShape(value)}><Image src={image} alt={`${label}のぬいイメージ`} width={92} height={92}/><strong>{label}</strong><small>{description}</small></button>)}</div></fieldset>
+      <label className="field">さわり心地<select value={softness} onChange={e=>setSoftness(e.target.value as Softness)}><option value="firm">しっかりめ</option><option value="balanced">ふつう</option><option value="soft">やわらかめ</option></select></label>
+      <fieldset><legend>色</legend><div className="color-picker"><input type="color" aria-label="ぬいの色" value={theme} onChange={e=>setTheme(e.target.value)}/><span className="color-value">好きな色を選べます</span></div></fieldset>
+      <h2>採寸</h2><p className="small">単位はcm。数字はあとから直せます。</p><p className="required-guide"><span className="required">必須</span>まずはこの4項目だけで登録できます。残りは分かる範囲で大丈夫です。</p><div className="grid">{measurementRegistry.map(item=><label className="field" key={item.key}><span>{item.label}{item.required&&<span className="required">必須</span>}</span><input inputMode="decimal" value={measurements[item.key]??""} onChange={e=>updateMeasurement(item.key,e.target.value)} placeholder="cm"/></label>)}</div><button onClick={save}>保存する</button>
+    </div>
     <div className="card"><h2>端末内データ</h2><div className="actions"><button className="secondary" onClick={download}>書き出す</button><button className="secondary" onClick={()=>fileRef.current?.click()}>読み込む</button><button className="secondary" onClick={()=>setClearOpen(true)}>すべて消去</button><input ref={fileRef} type="file" accept="application/json" onChange={restore} hidden/></div></div>
     {notice&&<p role="status" className="small">{notice}</p>}
     <section aria-label="保存したプロフィール">{saved.map(profile=><div className="card" key={profile.id}><div className="actions" style={{alignItems:"center"}}><PlushAvatar shape={profile.shape} theme={profile.avatarTheme} size={56}/><div><strong>{profile.name}</strong><div className="small">採寸充足度 {measurementCompletion(profile.measurements)}%・更新 {profile.updatedAt.slice(0,10)}</div></div></div><div className="actions"><button className="secondary" onClick={()=>setShareTarget(profile)}>共有</button><button className="secondary" onClick={()=>duplicate(profile)}>複製</button><button className="secondary" onClick={()=>setRemoveTarget(profile)}>削除</button></div></div>)}</section>
     {removeTarget&&<div className="drawer" role="presentation"><aside role="dialog" aria-modal="true" aria-label="削除の確認"><h2>このカルテを削除しますか？</h2><p className="small">削除したデータはこの端末から戻せません。</p><div className="actions"><button onClick={remove}>削除する</button><button className="secondary" onClick={()=>setRemoveTarget(null)}>やめる</button></div></aside></div>}
     {clearOpen&&<div className="drawer" role="presentation"><aside role="dialog" aria-modal="true" aria-label="データ消去の確認"><h2>端末内のデータを消去しますか？</h2><p className="small">プロフィール、判定、下書きをすべて消去します。</p><div className="actions"><button onClick={clearData}>消去する</button><button className="secondary" onClick={()=>setClearOpen(false)}>やめる</button></div></aside></div>}
     {shareTarget&&<div className="drawer" role="presentation"><aside role="dialog" aria-modal="true" aria-label="カルテ共有"><h2>カルテを共有</h2><p className="small">共有リンクを知っている人が見られます。</p><label><input type="checkbox" checked={shareName} onChange={e=>setShareName(e.target.checked)}/> 名前を載せる</label><label><input type="checkbox" checked={shareMeasurements} onChange={e=>setShareMeasurements(e.target.checked)}/> 寸法を載せる</label><div className="actions"><ShareActions title="採寸カルテ" status="寸法から見た目安" url={`${location.origin}/s/${shared}`}/><button className="secondary" onClick={()=>navigator.clipboard?.writeText(`${location.origin}/s/${shared}`)}>リンクをコピー</button><button className="secondary" onClick={()=>setShareTarget(null)}>閉じる</button></div></aside></div>}
-  </>
+  </>;
 }
