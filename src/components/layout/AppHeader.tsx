@@ -18,8 +18,9 @@ export function AppHeader(){
   const [open,setOpen]=useState(false);const [closing,setClosing]=useState(false);
   const trigger=useRef<HTMLButtonElement>(null);
   const drawer=useRef<HTMLElement>(null);
-  function openDrawer(){setClosing(false);setOpen(true)}
-  const closeDrawer=useCallback(()=>{if(!open||closing)return;setClosing(true);window.setTimeout(()=>{setOpen(false);setClosing(false)},220)},[open,closing]);
+  const closingRef=useRef(false);
+  function openDrawer(){closingRef.current=false;setClosing(false);setOpen(true)}
+  const closeDrawer=useCallback(()=>{if(!open||closingRef.current)return;closingRef.current=true;setClosing(true);window.setTimeout(()=>{setOpen(false);setClosing(false);closingRef.current=false},220)},[open]);
   useEffect(()=>{
     if(!open)return;
     const returnFocus=trigger.current;
@@ -36,7 +37,7 @@ export function AppHeader(){
     };
     document.addEventListener("keydown",onKey);
     return()=>{document.body.style.overflow=previous;document.removeEventListener("keydown",onKey);returnFocus?.focus()};
-  },[open]);
+  },[open,closeDrawer]);
   return <>
     <header className="top">
       <button ref={trigger} aria-label="メニューを開く" aria-expanded={open&&!closing} aria-controls="app-menu" className="menu-button secondary" onClick={openDrawer}>
