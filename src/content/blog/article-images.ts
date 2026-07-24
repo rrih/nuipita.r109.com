@@ -1,0 +1,3 @@
+export const articleImages:Record<string,string>={
+  "nui-fuku-size-10cm-15cm":"/blog/nui-fuku-size-10cm-15cm.jpg","nui-measurement-guide":"/blog/nui-measurement-guide.jpg","nui-fuku-head-wont-fit":"/blog/nui-fuku-head-wont-fit.jpg","nui-fuku-flat-measurement":"/blog/nui-fuku-flat-measurement.jpg","nui-fuku-stretch":"/blog/nui-fuku-stretch.jpg","nui-pants-overall-size":"/blog/nui-pants-overall-size.jpg","nui-pouch-inner-size":"/blog/nui-pouch-inner-size.jpg","nui-pouch-falls-over":"/blog/nui-pouch-falls-over.jpg","two-nui-one-pouch":"/blog/two-nui-one-pouch.jpg","nui-pouch-depth":"/blog/nui-pouch-depth.jpg","handmade-nui-fuku-size-card":"/blog/handmade-nui-fuku-size-card.jpg","nui-size-card":"/blog/nui-size-card.jpg"
+};

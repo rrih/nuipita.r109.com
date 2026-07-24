@@ -12,10 +12,10 @@ function NavIcon({name}:NavIconProps){
 export function AppBottomNav(){
   const pathname=usePathname();
   const tabs=[
-    ["/nui","カルテ","登録","profile"],
-    ["/","服","サイズ判定","clothes"],
-    ["/pouch","ポーチ","サイズ判定","pouch"],
+    ["/nui","カルテ","profile"],
+    ["/","服","clothes"],
+    ["/pouch","ポーチ","pouch"],
   ] as const;
   const activeIndex=pathname==="/nui"?0:pathname==="/pouch"?2:pathname==="/"?1:-1;
-  return <nav className="nav" aria-label="主な機能"><span className="nav-indicator" style={{transform:`translateX(${Math.max(activeIndex,0)*100}%)`,opacity:activeIndex<0?0:1}} aria-hidden="true"/>{tabs.map(([href,label,description,icon],index)=><Link key={href} href={href} aria-current={activeIndex===index?"page":undefined}><span className="nav-icon"><NavIcon name={icon}/></span><span>{label}</span><small>{description}</small></Link>)}</nav>;
+  return <nav className="nav" aria-label="主な機能"><span className="nav-indicator" style={{transform:`translateX(${Math.max(activeIndex,0)*100}%)`,opacity:activeIndex<0?0:1}} aria-hidden="true"/>{tabs.map(([href,label,icon],index)=><Link key={href} href={href} aria-current={activeIndex===index?"page":undefined}><span className="nav-icon"><NavIcon name={icon}/></span><span>{label}</span></Link>)}</nav>;
 }
